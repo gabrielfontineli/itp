@@ -13,4 +13,5 @@ int main(){
     } else if (d >= a && d >= b && d >= c){
         printf("Maior: %d\n", d);
     }
+    return 0;
 }

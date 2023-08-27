@@ -8,4 +8,5 @@ int main(){
     if (a % b == 0){
         printf("Resultado: %d\n", a/b);
     }
+    return 0;
 }

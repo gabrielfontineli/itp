@@ -9,4 +9,5 @@ int main()
     quantidade_dias %= 30;
     dias = quantidade_dias;
     printf("%d ano(s)\n%d mes(es)\n%d dia(s)\n", anos, meses, dias);
+    return 0;
 }
