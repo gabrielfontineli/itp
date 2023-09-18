@@ -17,7 +17,7 @@ int soma_divisores(int value){
   return soma;
 }
 int testa_amigos(int a, int b){
-  if (soma_divisores(a) == b && soma_divisores(b) == a) {
+  if (a != b && soma_divisores(a) == b && soma_divisores(b) == a) {
     return 1;
   } else {
     return 0;
