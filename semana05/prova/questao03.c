@@ -84,49 +84,65 @@ O IMPERIO ESTA CONSTRUINDO UMA NOVA ESTRELA DA MORTE. QUE A FORCA ESTEJA COM VOC
 #include <stdio.h>
 #include <string.h>
 
-const char S[]=
+const char S[] =
     {'0','1','2','3','4','5','6','7','8','9',
      'A','B','C','D','E','F','G','H','I','J',
      'K','L','M','N','O','P','Q','R','S','T',
      'U','V','W','X','Y','Z','.',',','?',' '};
 
-int difference(char a, char b) {
-    int indexA, indexB;
+int getIndexOfChar(char c) {
     for (int i = 0; i < 40; i++) {
-        if (S[i] == a) indexA = i;
-        if (S[i] == b) indexB = i;
+        if (S[i] == c) {
+            return i;
+        }
     }
-    return (indexA - indexB + 40) % 40;
+    return -1;
 }
 
-void findKey(char C[], char KP[], int K[]) {
-    for (int i = 0; i < 4; i++) {
-        K[i] = difference(C[i], KP[i]);
-    }
-}
-
-void decipher(char C[], int K[], char P[]) {
+void vigenereDecipher(char C[], char K[], char P[]) {
     int len = strlen(C);
     for (int i = 0; i < len; i++) {
-        P[i] = S[(difference(C[i], '0' + K[i % 4]) + 40) % 40];
+        int indexC = getIndexOfChar(C[i]);
+        int indexK = K[i % 4] - '0';
+
+        int indexP = (indexC - indexK + 40) % 40;
+        P[i] = S[indexP];
     }
     P[len] = '\0';
 }
 
-int main() {
-    char C[201];
-    int K[4];
+int findKey(char C[], char KP[], char K[]) {
     char P[201];
-    const char KP[] = "QUE A FORCA ESTEJA COM VOCE";
-    scanf("%s", C);
-    findKey(C, KP, K);
-    decipher(C, K, P);
+    int lenC = strlen(C);
+    int lenKP = strlen(KP);
+    for (int i = 0; i <= lenC - lenKP; i++) {
+        for (int j = 0; j < 4; j++) {
+            K[j] = (getIndexOfChar(C[i + j]) - getIndexOfChar(KP[j]) + 40) % 40;
+            if (K[j] < 10) K[j] += '0';  // Para garantir que o valor resultante seja um dígito
+            else break;  // Se não for um dígito, interrompe o loop, pois a chave não pode ter mais de 4 dígitos
+        }
+        K[4] = '\0';
+        vigenereDecipher(C, K, P);
+        if (strstr(P, KP)) {
+            return 1;
+        }
+    }
+    return 0;
+}
 
-    if (strstr(P, KP) != NULL) {
-        printf("%d%d%d%d\n", K[0], K[1], K[2], K[3]);
-        printf("%s\n", P);
+
+int main() {
+    char K[5], P[201], C[201], KP[] = "QUE A FORCA ESTEJA COM VOCE";
+
+    fgets(C, 201, stdin);
+    C[strcspn(C, "\n")] = 0;  // remove the newline
+
+    if (findKey(C, KP, K)) {
+        vigenereDecipher(C, K, P);
+        printf("%s\n%s\n", K, P);
     } else {
         printf("Mensagem nao e da Resistencia!\n");
     }
+
     return 0;
 }

@@ -1,30 +1,25 @@
-//nao ta certo ainda
-
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
 
 int main() {
     char texto[51], padrao[51];
-    bool caracteres_no_padrao[256] = {false}; // tabela ASCII
+    bool caracteres_no_padrao[256] = {false};
 
-    // Ler entrada
     scanf("%s", texto);
     scanf("%s", padrao);
 
     int lenTexto = strlen(texto);
     int lenPadrao = strlen(padrao);
 
-    // Marcar os caracteres que aparecem no padrão
     for (int i = 0; i < lenPadrao; i++) {
-        caracteres_no_padrao[(int) padrao[i]] = true;
+        caracteres_no_padrao[(unsigned char) padrao[i]] = true;
     }
 
     int i = 0;
     bool encontrou = false;
     while (i <= lenTexto - lenPadrao) {
-        // Verificar se o primeiro caractere da subsequência está na tabela
-        if (!caracteres_no_padrao[(int) texto[i]]) {
+        if (!caracteres_no_padrao[(unsigned char) texto[i]]) {
             printf("%c não\n", texto[i]);
             i++;
             continue;
